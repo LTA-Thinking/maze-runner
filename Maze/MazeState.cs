@@ -18,4 +18,10 @@ public class MazeState
         Bots[bot.GetId()] = bot;
         return bot;
     }
+
+    public Bot? GetBot(Guid id)
+    {
+        Bots.TryGetValue(id, out var bot);
+        return bot;
+    }
 }

@@ -4,3 +4,9 @@ GET http://localhost:5000/api/helloworld
 
 ###
 GET http://localhost:5000/api/maze
+
+###
+GET http://localhost:5000/api/maze/bots
+
+###
+POST http://localhost:5000/api/maze/bot?x=2&y=0&energy=80&name=other

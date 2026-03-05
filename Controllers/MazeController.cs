@@ -47,4 +47,38 @@ public class MazeController : ControllerBase
         });
         return Ok(bots);
     }
+
+    [HttpGet("bot/{id}")]
+    public IActionResult GetBot(Guid id)
+    {
+        var bot = _mazeState.GetBot(id);
+        if (bot == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(new
+        {
+            id = bot.GetId(),
+            name = bot.GetName(),
+            x = bot.GetPosition().x,
+            y = bot.GetPosition().y,
+            energy = bot.GetEnergy()
+        });
+    }
+
+    [HttpPost("bot/{id}/command")]
+    public IActionResult CommandBot(Guid id, [FromQuery] string command)
+    {
+        var bot = _mazeState.GetBot(id);
+        if (bot == null)
+        {
+            return NotFound();
+        }
+
+        // Handle the command here (e.g., move, scan, etc.)
+        // You can use a switch or if-else statements to process different commands
+
+        return Ok();
+    }
 }
