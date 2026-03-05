@@ -9,8 +9,14 @@
 <body>
     <h1>Maze Runner</h1>
     <div id="status">Loading maze...</div>
-    <canvas id="mazeCanvas"></canvas>
-    <button onclick="fetchMaze()">Refresh Maze</button>
+    <div id="main">
+        <canvas id="mazeCanvas"></canvas>
+        <aside id="botPanel">
+            <h2>Bots</h2>
+            <div id="botList"><em>No bots yet</em></div>
+        </aside>
+    </div>
+    <button onclick="refreshAll()">Refresh</button>
 
     <script src="maze.js"></script>
 </body>
