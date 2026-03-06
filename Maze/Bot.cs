@@ -78,6 +78,13 @@ public class Bot
 
     public Maze Scan(Maze maze, int range)
     {
+        if (_energy < Math.Pow(range, 2))
+        {
+            throw new InvalidOperationException("Bot does not have enough energy to perform the scan.");
+        }
+
+        _energy -= (int)Math.Pow(range, 2); // Decrease energy based on the area scanned
+
         var width = Math.Min(Math.Min(range * 2 + 1, maze.Width), Math.Min(_x + range + 1, maze.Width - _x + range));
         var height = Math.Min(Math.Min(range * 2 + 1, maze.Height), Math.Min(_y + range + 1, maze.Height - _y + range));
 

@@ -76,9 +76,32 @@ public class MazeController : ControllerBase
             return NotFound();
         }
 
-        // Handle the command here (e.g., move, scan, etc.)
-        // You can use a switch or if-else statements to process different commands
+        var parameters = command.Split(' ');
 
-        return Ok();
+        switch (parameters[0].ToLower())
+        {
+            case "move":
+                if (parameters.Length < 2 || !Enum.TryParse<Direction>(parameters[1], true, out var direction))
+                {
+                    return BadRequest("Invalid move command. Usage: move <direction>");
+                }
+
+                if (!bot.TryMove(direction, _mazeState.Maze))
+                {
+                    return BadRequest("Bot cannot move in that direction.");
+                }
+
+                return Ok();
+            case "scan":
+                if (parameters.Length < 2 || !int.TryParse(parameters[1], out var radius))
+                {
+                    return BadRequest("Invalid scan command. Usage: scan <radius>");
+                }
+
+                var result = bot.Scan(_mazeState.Maze, radius);
+                return Ok(result.ToString());
+            default:
+                return BadRequest("Unknown command.");
+        }
     }
 }
