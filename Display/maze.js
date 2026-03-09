@@ -48,8 +48,8 @@ async function fetchBots() {
     }
 }
 
-function getBotColor(index) {
-    return BOT_COLORS[index % BOT_COLORS.length];
+function getBotColor(bot, index) {
+    return bot.team ? bot.team : BOT_COLORS[index % BOT_COLORS.length];
 }
 
 function parseMaze(mazeString) {
@@ -157,7 +157,7 @@ function drawMaze({ grid, cellsX, cellsY }) {
 function drawBots(ctx, bots) {
     const botRadius = CELL_SIZE * 0.3;
     bots.forEach((bot, i) => {
-        const color = getBotColor(i);
+        const color = getBotColor(bot, i);
         const cx = PADDING + bot.x * CELL_SIZE + CELL_SIZE / 2;
         const cy = PADDING + bot.y * CELL_SIZE + CELL_SIZE / 2;
 
@@ -207,13 +207,14 @@ function renderBotPanel() {
         return;
     }
     list.innerHTML = cachedBots.map((bot, i) => {
-        const color = getBotColor(i);
+        const color = getBotColor(bot, i);
         const pct = Math.max(0, Math.min(100, bot.energy));
         const barColor = pct > 50 ? '#6bcb77' : pct > 20 ? '#ffd93d' : '#ff6b6b';
         return `
             <div class="bot-card">
                 <span class="bot-icon" style="background:${color}"></span>
                 <span class="bot-name">${bot.name || 'Bot ' + (i + 1)}</span>
+                <div class="bot-detail">Team: <span style="color:${bot.team}">${bot.team}</span></div>
                 <div class="bot-detail">ID: ${bot.id.substring(0, 8)}...</div>
                 <div class="bot-detail">Pos: (${bot.x}, ${bot.y})</div>
                 <div class="bot-detail">Energy: ${bot.energy}</div>

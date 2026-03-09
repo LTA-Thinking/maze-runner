@@ -7,14 +7,27 @@ public class Bot
     private int _energy;
     private Guid _id;
     private string _name;
+    private string _team;
 
-    public Bot(int x, int y, int energy, string name = "")
+    public Bot(int x, int y, int energy, string name = "", string team = "#ffffff")
     {
         _x = x;
         _y = y;
         _id = Guid.NewGuid();
         _energy = energy;
         _name = string.IsNullOrWhiteSpace(name) ? $"Bot-{_id.ToString().Substring(0, 4)}" : name;
+        _team = IsValidHexColor(team) ? team : "#ffffff";
+    }
+
+    public string GetTeam()
+    {
+        return _team;
+    }
+
+    public void SetTeam(string team)
+    {
+        if (IsValidHexColor(team))
+            _team = team;
     }
 
     public string GetName()
@@ -74,6 +87,13 @@ public class Bot
         }
 
         return false; // Move blocked by a wall
+    }
+
+    private static bool IsValidHexColor(string color)
+    {
+        if (string.IsNullOrWhiteSpace(color)) return false;
+        if (!color.StartsWith('#')) color = "#" + color;
+        return System.Text.RegularExpressions.Regex.IsMatch(color, @"^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$");
     }
 
     public Maze Scan(Maze maze, int range)

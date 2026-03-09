@@ -20,14 +20,16 @@ public class MazeController : ControllerBase
         return Ok(_mazeState.Maze.ToString());
     }
 
-    [HttpPost("bot")]
-    public IActionResult CreateBot([FromQuery] int x = 0, [FromQuery] int y = 0, [FromQuery] int energy = 100, [FromQuery] string name = "")
+    [HttpPost("team/{team}/bot")]
+    public IActionResult CreateBot(string team, [FromQuery] int x = 0, [FromQuery] int y = 0, [FromQuery] int energy = 100, [FromQuery] string name = "")
     {
-        var bot = _mazeState.CreateBot(x, y, energy, name);
-        return Created($"api/maze/bot/{bot.GetId()}", new
+        var hexTeam = "#" + team;
+        var bot = _mazeState.CreateBot(x, y, energy, name, hexTeam);
+        return Created($"api/maze/team/{team}/bot/{bot.GetId()}", new
         {
             id = bot.GetId(),
             name = bot.GetName(),
+            team = bot.GetTeam(),
             x = bot.GetPosition().x,
             y = bot.GetPosition().y,
             energy = bot.GetEnergy()
@@ -41,10 +43,29 @@ public class MazeController : ControllerBase
         {
             id = b.GetId(),
             name = b.GetName(),
+            team = b.GetTeam(),
             x = b.GetPosition().x,
             y = b.GetPosition().y,
             energy = b.GetEnergy()
         });
+        return Ok(bots);
+    }
+
+    [HttpGet("team/{team}/bots")]
+    public IActionResult GetBotsByTeam(string team)
+    {
+        var hexTeam = "#" + team;
+        var bots = _mazeState.Bots.Values
+            .Where(b => b.GetTeam().Equals(hexTeam, StringComparison.OrdinalIgnoreCase))
+            .Select(b => new
+            {
+                id = b.GetId(),
+                name = b.GetName(),
+                team = b.GetTeam(),
+                x = b.GetPosition().x,
+                y = b.GetPosition().y,
+                energy = b.GetEnergy()
+            });
         return Ok(bots);
     }
 
@@ -61,6 +82,7 @@ public class MazeController : ControllerBase
         {
             id = bot.GetId(),
             name = bot.GetName(),
+            team = bot.GetTeam(),
             x = bot.GetPosition().x,
             y = bot.GetPosition().y,
             energy = bot.GetEnergy()

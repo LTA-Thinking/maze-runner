@@ -12,9 +12,9 @@ public class MazeState
         Maze = new Maze(width, height);
     }
 
-    public Bot CreateBot(int x = 0, int y = 0, int energy = 100, string name = "")
+    public Bot CreateBot(int x = 0, int y = 0, int energy = 100, string name = "", string team = "#ffffff")
     {
-        var bot = new Bot(x, y, energy, name);
+        var bot = new Bot(x, y, energy, name, team);
         Bots[bot.GetId()] = bot;
         return bot;
     }
